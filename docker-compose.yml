@@ -4,6 +4,5 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-      target: dev
     volumes:
       - .:/app

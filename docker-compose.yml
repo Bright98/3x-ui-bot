@@ -1,0 +1,9 @@
+version: "1.0"
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: dev
+    volumes:
+      - .:/app

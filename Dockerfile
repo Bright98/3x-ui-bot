@@ -1,24 +1,24 @@
 FROM golang:1.20-buster
-RUN apt-get update && apt-get install -y git
-#RUN apk add git
-## We create an /app directory within our
-## image that will hold our application source
-## files
+
+#proxy
 ENV GOPROXY=https://goproxy.io,direct
 ENV GOPRIVATE=git.mycompany.com,github.com/my/private
+
 RUN mkdir /app
 WORKDIR /app
 #COPY ams_core/go.mod ams_core/go.sum ./
-#RUN go mod download
-#ADD ./3x-ui-bot ./
 
-#RUN go mod init
-RUN #go list
+COPY go.mod .
 RUN go mod download
 
+COPY . .
+
+# Build the Go app
 RUN go build -o main .
 
-EXPOSE 9053
-## Our start command which kicks off
-## our newly created binary executable
+
+# This container exposes port 8080 to the outside world
+EXPOSE 8080
+
+# Run the binary program produced by `go install`
 CMD "/app/main"

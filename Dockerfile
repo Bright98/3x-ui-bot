@@ -13,7 +13,7 @@ WORKDIR /app
 #ADD ./3x-ui-bot ./
 
 #RUN go mod init
-RUN go list
+RUN #go list
 RUN go mod download
 
 RUN go build -o main .

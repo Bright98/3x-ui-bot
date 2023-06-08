@@ -2,7 +2,7 @@
 
 This bot tells clients traffic usage by config url.
 
-It works for `vless` and `vmess` configs now.
+It is working for `vless` and `vmess` configs now.
 
 ## how to run:
 - `git clone https://github.com/Bright98/3x-ui-bot.git`

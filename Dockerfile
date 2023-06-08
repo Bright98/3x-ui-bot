@@ -11,4 +11,4 @@ RUN go build -o 3x-ui-bot
 
 EXPOSE 8080
 
-CMD [ "/go-docker-demo" ]
+CMD [ "/3x-ui-bot" ]

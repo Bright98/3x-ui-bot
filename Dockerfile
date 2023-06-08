@@ -9,6 +9,7 @@ WORKDIR /app
 #COPY ams_core/go.mod ams_core/go.sum ./
 
 COPY go.mod .
+COPY go.sum .
 RUN go mod download
 
 COPY . .

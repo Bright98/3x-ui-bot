@@ -10,7 +10,7 @@ RUN mkdir /app
 WORKDIR /app
 #COPY ams_core/go.mod ams_core/go.sum ./
 #RUN go mod download
-ADD ./3x-ui-bot ./
+#ADD ./3x-ui-bot ./
 
 #RUN go mod init
 RUN go list

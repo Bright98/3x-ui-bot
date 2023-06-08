@@ -15,4 +15,3 @@ It works for `vless` and `vmess` configs now.
   - panel password
 
 - `sh install.sh`
-- 

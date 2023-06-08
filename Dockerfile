@@ -7,7 +7,7 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN go build -o /3x-ui-bot
+RUN go build -o 3x-ui-bot
 
 EXPOSE 8080
 

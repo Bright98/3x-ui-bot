@@ -4,7 +4,7 @@ This bot tells clients traffic usage by config url.
 
 It is working for `vless` and `vmess` configs now.
 
-## how to run:
+## How to run:
 1. install docker:
   - `bash <(curl -sSL https://get.docker.com)`
 2. get project:
@@ -18,3 +18,6 @@ It is working for `vless` and `vmess` configs now.
      - panel password
 
    - `sh install.sh`
+
+## ⚠️ Attention
+dont use `-` in user email in panel 

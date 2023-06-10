@@ -93,3 +93,11 @@ func getClientTraffic(url string) string {
 
 	return readClientTraffic(clientTraffic)
 }
+func getClientTrafficByEmail(mail string) string {
+	clientTraffic, err := GetClientTraffic(mail)
+	if err != nil {
+		return convertErrorMessage(err.Error())
+	}
+
+	return readClientTraffic(clientTraffic)
+}

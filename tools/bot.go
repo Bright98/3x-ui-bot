@@ -8,6 +8,7 @@ import (
 	tu "github.com/mymmrac/telego/telegoutil"
 	"log"
 	"os"
+	"strings"
 )
 
 var (
@@ -39,31 +40,61 @@ func init() {
 }
 
 func Start() {
-	botHandler.HandleMessage(func(bot *telego.Bot, message telego.Message) {
-		//get command
-		command, _ := tu.ParseCommand(message.Text)
-		if command == "start" {
-			//send hello message
-			sendMessage(message, HelloMessage)
-		} else {
-			log.Println("I got config url")
-			sendMessage(message, getClientTraffic(message.Text))
-		}
-	})
+	botHandler.HandleMessage(handleBotMessage)
+	botHandler.HandleCallbackQuery(handleBotCallback)
 
 	defer botHandler.Stop()
 	botHandler.Start()
 }
-func sendMessage(message telego.Message, messageText string) {
-	chatID := tu.ID(message.Chat.ID)
+func handleBotMessage(_ *telego.Bot, message telego.Message) {
+	//get command
+	command, _ := tu.ParseCommand(message.Text)
+	if command == "start" {
+		//send hello message
+		sendMessage(message.Chat.ID, HelloMessage)
+	} else {
+		log.Println("I got config url")
+
+		email, err := GetUserEmailFromConfigURL(message.Text)
+		if err != nil {
+			sendMessage(message.Chat.ID, convertErrorMessage(err.Error()))
+		}
+
+		inlineKeyboard := retryInlineButton(email)
+		sendMessage(message.Chat.ID, getClientTraffic(message.Text), inlineKeyboard)
+	}
+}
+func handleBotCallback(_ *telego.Bot, query telego.CallbackQuery) {
+	queries := strings.Split(query.Data, "###")
+
+	if len(queries) > 1 {
+		switch queries[0] {
+		case "retry_callback":
+			inlineKeyboard := retryInlineButton(queries[1])
+			sendMessage(query.Message.Chat.ID, getClientTrafficByEmail(queries[1]), inlineKeyboard)
+		}
+	}
+}
+func sendMessage(chatID int64, messageText string, replyMarkup ...telego.ReplyMarkup) {
+	_chatID := tu.ID(chatID)
 	params := telego.SendMessageParams{
-		ChatID:    chatID,
+		ChatID:    _chatID,
 		Text:      messageText,
 		ParseMode: "Markdown",
+	}
+	if len(replyMarkup) > 0 {
+		params.ReplyMarkup = replyMarkup[0]
 	}
 
 	_, err := bot.SendMessage(&params)
 	if err != nil {
 		fmt.Println("Error sending telegram message :", err)
 	}
+}
+func retryInlineButton(email string) *telego.InlineKeyboardMarkup {
+	return tu.InlineKeyboard(
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton(RetryCalcClientUsage).WithCallbackData("retry_callback###" + email),
+		),
+	)
 }

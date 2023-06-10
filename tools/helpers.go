@@ -21,6 +21,10 @@ func decodeBase64(str string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(str)
 }
 func convertTimestampToPersian(timestamp int64) string {
+	if timestamp == 0 {
+		return Unlimited
+	}
+
 	pt := ptime.Unix(0, timestamp*int64(time.Millisecond))
 	return pt.Format("yyyy/MM/dd")
 }

@@ -72,6 +72,7 @@ func GetUserEmailFromConfigURL(url string) (string, error) {
 func readClientTraffic(clientTraffic *UserInboundResponse) string {
 	text := ""
 
+	text += "*" + ClientEmail + "*" + clientTraffic.Email + "\n"
 	text += "*" + DownloadClientUsage + "*" + clearUsage(clientTraffic.Down) + "\n"
 	text += "*" + UploadClientUsage + "*" + clearUsage(clientTraffic.Up) + "\n"
 	text += "*" + TotalClientUsage + "*" + clearUsage(clientTraffic.Down+clientTraffic.Up) + "\n"

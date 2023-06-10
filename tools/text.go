@@ -4,6 +4,7 @@ package tools
 const (
 	HelloMessage         = "خوش اومدین 👋\n برای دریافت باقیمانده حجم و مدت زمان استفاده از vpn، کانفیگ خود را وارد کنین:\n\n"
 	RetryCalcClientUsage = "دریافت مجدد"
+	ClientEmail          = "📬 ایمیل: "
 	AllowedClientUsage   = "✅ حجم مجاز مصرف: "
 	UploadClientUsage    = "⬆️ مقدار آپلود شده: "
 	DownloadClientUsage  = "⬇️ مقدار دانلود شده: "
@@ -15,7 +16,7 @@ const (
 	GigaByte  = "گیگابایت"
 	TeraByte  = "ترابایت"
 	PetaByte  = "پتابایت"
-	Unlimited = "بی نهایت"
+	Unlimited = "♾ بی نهایت"
 
 	SomethingGetWrong   = "مشکلی پیش آمده"
 	InvalidConfig       = "کانفیگ معتبر نمی باشد"

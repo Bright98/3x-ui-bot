@@ -1,21 +1,30 @@
 FROM golang:1.20.5-alpine3.17 AS builder
-
-#proxy
+RUN apk update && apk add git
+#RUN apk add git
 ENV GOPROXY=https://goproxy.io,direct
 ENV GOPRIVATE=git.mycompany.com,github.com/my/private
-
+## We create an /app directory within our
+## image that will hold our application source
+## files
+RUN mkdir /MultiStage
 RUN mkdir /app
-WORKDIR /app
-#COPY ams_core/go.mod ams_core/go.sum ./
+WORKDIR /MultiStage
+ENV GO111MODULE=on
+COPY ./ ./
 
-COPY go.mod .
-COPY go.sum .
+#RUN go mod init
+RUN go list
 RUN go mod download
 
-COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
-# Build the Go app
-RUN go build -o main .
+#second stage
+FROM alpine:latest
 
-# Run the binary program produced by go install
+WORKDIR /app
+COPY --from=builder /MultiStage/main /app/
+
+EXPOSE 9002
+## Our start command which kicks off
+## our newly created binary executable
 CMD "/app/main"

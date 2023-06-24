@@ -1,21 +1,28 @@
-FROM golang:1.20-buster
-
-#proxy
+FROM golang:1.18.1-alpine3.15 AS builder
+RUN apk update && apk add git
+#RUN apk add git
 ENV GOPROXY=https://goproxy.io,direct
 ENV GOPRIVATE=git.mycompany.com,github.com/my/private
-
+## We create an /app directory within our
+## image that will hold our application source
+## files
+RUN mkdir /MultiStage
 RUN mkdir /app
-WORKDIR /app
-#COPY ams_core/go.mod ams_core/go.sum ./
-
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
-
+WORKDIR /MultiStage
+ENV GO111MODULE=on
 COPY . .
 
-# Build the Go app
-RUN go build -o main .
+#RUN go mod init
+RUN go list
+RUN go mod download
 
-# Run the binary program produced by `go install`
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
+
+#second stage
+FROM alpine:latest
+
+WORKDIR /app
+COPY --from=builder /MultiStage/main /app/
+COPY --from=builder /MultiStage/.env /app/
+
 CMD "/app/main"

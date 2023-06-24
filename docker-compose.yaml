@@ -12,4 +12,3 @@ services:
       - PANEL_USERNAME
       - PANEL_PASSWORD
     network_mode: host
-

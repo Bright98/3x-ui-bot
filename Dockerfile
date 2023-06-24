@@ -24,7 +24,6 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /MultiStage/main /app/
 
-EXPOSE 9002
 ## Our start command which kicks off
 ## our newly created binary executable
 CMD "/app/main"

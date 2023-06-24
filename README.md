@@ -20,4 +20,4 @@ It is working for `vless` and `vmess` configs now.
    - `sh install.sh`
 
 ## ⚠️ Attention
-dont use `-` in user email in panel 
+dont use `- (dash)` in user email in panel 

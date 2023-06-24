@@ -22,7 +22,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 FROM alpine:latest
 
 WORKDIR /app
-COPY --from=builder /MultiStage/main /app/
-COPY --from=builder /MultiStage/.env /app/
+COPY --from=builder /MultiStage/. /app/
 
 CMD "/app/main"

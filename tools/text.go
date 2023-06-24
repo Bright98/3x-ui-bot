@@ -22,6 +22,8 @@ const (
 	InvalidConfig       = "کانفیگ معتبر نمی باشد"
 	CantConnectToServer = "مشکل در اتصال به سرور"
 	UserNotExist        = "کاربر در این سرور نمی باشد"
+	CantGetImage        = "مشکل در دریافت تصویر"
+	CantDecodeImage     = "مشکل در خواندن بارکد"
 )
 
 // variables
@@ -41,10 +43,13 @@ const (
 
 // errors
 const (
-	AuthErr             = "AUTH_ERR"
-	LoginFailedErr      = "LOGIN_FAILED"
-	CantConnectErr      = "CANT_CONNECT_ERR"
-	InvalidationErr     = "INVALIDATION_ERR"
-	ProtocolNotFoundErr = "PROTOCOL_NOT_FOUND"
-	UserNotFoundErr     = "USER_NOT_FOUND"
+	AuthErr                  = "AUTH_ERR"
+	LoginFailedErr           = "LOGIN_FAILED"
+	CantConnectErr           = "CANT_CONNECT_ERR"
+	InvalidationErr          = "INVALIDATION_ERR"
+	ProtocolNotFoundErr      = "PROTOCOL_NOT_FOUND"
+	UserNotFoundErr          = "USER_NOT_FOUND"
+	MessageIsNotImageTypeErr = "MESSAGE_IS_NOT_IMAGE_TYPE"
+	CantGetImageErr          = "CANT_GET_IMAGE"
+	CantDecodeImageErr       = "CANT_DECODE_IMAGE"
 )

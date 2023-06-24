@@ -3,6 +3,7 @@ package tools
 import (
 	"fmt"
 	"github.com/joho/godotenv"
+	//"github.com/makiuchi-d/gozxing/multi/qrcode"
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
@@ -53,15 +54,14 @@ func handleBotMessage(_ *telego.Bot, message telego.Message) {
 		//send hello message
 		sendMessage(message.Chat.ID, HelloMessage)
 	} else {
-		log.Println("I got config url")
-
-		email, err := GetUserEmailFromConfigURL(message.Text)
+		configUrl := getConfigUrlFromMessage(message)
+		email, err := GetUserEmailFromConfigURL(configUrl)
 		if err != nil {
 			sendMessage(message.Chat.ID, convertErrorMessage(err.Error()))
 		}
 
 		inlineKeyboard := retryInlineButton(email)
-		sendMessage(message.Chat.ID, getClientTraffic(message.Text), inlineKeyboard)
+		sendMessage(message.Chat.ID, getClientTraffic(configUrl), inlineKeyboard)
 	}
 }
 func handleBotCallback(_ *telego.Bot, query telego.CallbackQuery) {

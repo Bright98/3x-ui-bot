@@ -6,6 +6,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/mymmrac/telego"
+	tu "github.com/mymmrac/telego/telegoutil"
+	"github.com/tuotoo/qrcode"
 	ptime "github.com/yaa110/go-persian-calendar"
 	"io/ioutil"
 	"net/http"
@@ -69,6 +72,32 @@ func getDigitOfNumber(i int64) int {
 		count++
 	}
 	return count
+}
+func scanQRCode(photo []byte) (string, error) {
+	qr, err := qrcode.Decode(bytes.NewReader(photo))
+	if err != nil {
+		return "", errors.New(CantDecodeImageErr)
+	}
+	return qr.Content, nil
+}
+func getImageFromBot(message telego.Message) ([]byte, error) {
+	photo := message.Photo
+	if photo == nil {
+		return nil, errors.New(MessageIsNotImageTypeErr)
+	}
+
+	file, err := bot.GetFile(&telego.GetFileParams{FileID: photo[1].FileID})
+	if err != nil {
+		return nil, errors.New(CantGetImageErr)
+	}
+
+	url := "https://api.telegram.org/file/bot" + os.Getenv(BotToken) + "/" + file.FilePath
+	bytes, err := tu.DownloadFile(url)
+	if err != nil {
+		return nil, errors.New(CantGetImageErr)
+	}
+
+	return bytes, err
 }
 
 func postApi(body map[string]any, route string) ([]byte, string, error) {
@@ -153,6 +182,10 @@ func convertErrorMessage(err string) string {
 		return InvalidConfig
 	case UserNotFoundErr:
 		return UserNotExist
+	case CantGetImageErr:
+		return CantGetImage
+	case CantDecodeImageErr:
+		return CantDecodeImage
 	default:
 		return SomethingGetWrong
 	}

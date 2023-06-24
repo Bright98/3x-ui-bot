@@ -3,6 +3,7 @@ package tools
 import (
 	"encoding/json"
 	"errors"
+	"github.com/mymmrac/telego"
 	"strings"
 )
 
@@ -101,4 +102,25 @@ func getClientTrafficByEmail(mail string) string {
 	}
 
 	return readClientTraffic(clientTraffic)
+}
+func getConfigUrlFromMessage(message telego.Message) string {
+	photo, err := getImageFromBot(message)
+	configUrl := ""
+
+	if err != nil {
+		if err.Error() == MessageIsNotImageTypeErr {
+			//message is text
+			configUrl = message.Text
+		} else {
+			sendMessage(message.Chat.ID, convertErrorMessage(err.Error()))
+		}
+	} else {
+		//message is photo
+		configUrl, err = scanQRCode(photo)
+		if err != nil {
+			sendMessage(message.Chat.ID, convertErrorMessage(err.Error()))
+		}
+	}
+
+	return configUrl
 }

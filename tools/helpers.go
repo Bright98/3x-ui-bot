@@ -85,8 +85,9 @@ func getImageFromBot(message telego.Message) ([]byte, error) {
 	if photo == nil {
 		return nil, errors.New(MessageIsNotImageTypeErr)
 	}
+	lastPhoto := len(photo) - 1
 
-	file, err := bot.GetFile(&telego.GetFileParams{FileID: photo[1].FileID})
+	file, err := bot.GetFile(&telego.GetFileParams{FileID: photo[lastPhoto].FileID})
 	if err != nil {
 		return nil, errors.New(CantGetImageErr)
 	}

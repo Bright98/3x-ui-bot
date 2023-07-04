@@ -6,10 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/makiuchi-d/gozxing"
+	"github.com/makiuchi-d/gozxing/qrcode"
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
-	"github.com/tuotoo/qrcode"
 	ptime "github.com/yaa110/go-persian-calendar"
+	"image/jpeg"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -74,11 +76,32 @@ func getDigitOfNumber(i int64) int {
 	return count
 }
 func scanQRCode(photo []byte) (string, error) {
-	qr, err := qrcode.Decode(bytes.NewReader(photo))
+	// >>>> old package with errors
+	// >>>> "github.com/tuotoo/qrcode"
+	//qr, err := qrcode.Decode(bytes.NewReader(photo))
+	//if err != nil {
+	//	return "", errors.New(CantDecodeImageErr)
+	//}
+	//return qr.Content, nil
+
+	// >>>> use new package
+	img, err := jpeg.Decode(bytes.NewBuffer(photo))
 	if err != nil {
 		return "", errors.New(CantDecodeImageErr)
 	}
-	return qr.Content, nil
+
+	bmp, err := gozxing.NewBinaryBitmapFromImage(img)
+	if err != nil {
+		return "", errors.New(CantDecodeImageErr)
+	}
+
+	qrReader := qrcode.NewQRCodeReader()
+	result, err := qrReader.Decode(bmp, nil)
+	if err != nil {
+		return "", errors.New(CantDecodeImageErr)
+	}
+
+	return result.String(), nil
 }
 func getImageFromBot(message telego.Message) ([]byte, error) {
 	photo := message.Photo

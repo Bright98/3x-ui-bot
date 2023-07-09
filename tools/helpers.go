@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/makiuchi-d/gozxing"
 	"github.com/makiuchi-d/gozxing/qrcode"
 	"github.com/mymmrac/telego"
@@ -13,6 +14,7 @@ import (
 	ptime "github.com/yaa110/go-persian-calendar"
 	"image/jpeg"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -237,4 +239,10 @@ func findServerInfo(ip string) *ServerInfo {
 	}
 
 	return serverInfo
+}
+func loadEnvFile() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 }

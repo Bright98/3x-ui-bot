@@ -18,15 +18,12 @@ var (
 func init() {
 	var err error
 
+	//TODO: remove in upload
 	//load .env file
-	//err = godotenv.Load()
-	//if err != nil {
-	//	log.Fatal("Error loading .env file")
-	//}
+	loadEnvFile()
 
 	//get bot token
 	botToken := os.Getenv(BotToken)
-	fmt.Println(botToken)
 
 	// create new bot
 	bot, err = telego.NewBot(botToken, telego.WithDefaultDebugLogger())

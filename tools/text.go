@@ -32,13 +32,9 @@ const (
 	VMESS = "vmess"
 )
 
-// .env variables
+// .env
 const (
-	PanelPassword = "PANEL_PASSWORD"
-	PanelUsername = "PANEL_USERNAME"
-	PanelPort     = "PANEL_PORT"
-	ServerIP      = "SERVER_IP"
-	BotToken      = "BOT_TOKEN"
+	BotToken = "BotToken"
 )
 
 // errors

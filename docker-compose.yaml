@@ -6,9 +6,5 @@ services:
     container_name: 3x-ui-bot
     restart: always
     environment:
-      - BOT_TOKEN
-      - SERVER_IP
-      - PANEL_PORT
-      - PANEL_USERNAME
-      - PANEL_PASSWORD
+      - BotToken="aaaa"
     network_mode: host

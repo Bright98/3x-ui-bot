@@ -35,40 +35,48 @@ func convertVmessToVmessBody(url string) (*VmessBody, error) {
 
 	return vmessBody, nil
 }
-func getUserEmailFromVlessConfigURL(url string) string {
+func getUserEmailFromVlessConfigURL(url string) (string, string) {
+	//get email
 	splitString := strings.Split(url, "#")
 	configUser := splitString[len(splitString)-1]
 	splitConfigUser := strings.Split(configUser, "-")
 	userEmail := splitConfigUser[len(splitConfigUser)-1]
 
-	return userEmail
+	serverAddress := GetStringInBetween(url, "@", ":")
+
+	return userEmail, serverAddress
 }
-func getUserEmailFromVmessConfigURL(url string) (string, error) {
+func getUserEmailFromVmessConfigURL(url string) (string, string, error) {
 	vmessBody, err := convertVmessToVmessBody(url)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	splitUserInfo := strings.Split(vmessBody.UserInfo, "-")
 	userEmail := splitUserInfo[len(splitUserInfo)-1]
 
-	return userEmail, nil
+	return userEmail, vmessBody.ServerAddress, nil
 }
-func GetUserEmailFromConfigURL(url string) (string, error) {
+func GetUserEmailFromConfigURL(url string) (*ServerInfo, string, error) {
 	protocol, err := checkProtocol(url)
 	if err != nil {
-		return "", err
+		return nil, "", err
 	}
 
 	userEmail := ""
+	serverAddress := ""
 	if protocol == VLESS {
-		userEmail = getUserEmailFromVlessConfigURL(url)
+		userEmail, serverAddress = getUserEmailFromVlessConfigURL(url)
 	} else if protocol == VMESS {
-		userEmail, err = getUserEmailFromVmessConfigURL(url)
+		userEmail, serverAddress, err = getUserEmailFromVmessConfigURL(url)
 		if err != nil {
-			return "", err
+			return nil, "", err
 		}
 	}
-	return userEmail, nil
+
+	//find server info from requirements
+	serverInfo := findServerInfo(serverAddress)
+
+	return serverInfo, userEmail, nil
 }
 func readClientTraffic(clientTraffic *UserInboundResponse) string {
 	text := ""
@@ -83,20 +91,23 @@ func readClientTraffic(clientTraffic *UserInboundResponse) string {
 	return text
 }
 func getClientTraffic(url string) string {
-	mail, err := GetUserEmailFromConfigURL(url)
+	serverInfo, mail, err := GetUserEmailFromConfigURL(url)
 	if err != nil {
 		return convertErrorMessage(err.Error())
 	}
 
-	clientTraffic, err := GetClientTraffic(mail)
+	clientTraffic, err := GetClientTraffic(serverInfo, mail)
 	if err != nil {
 		return convertErrorMessage(err.Error())
 	}
 
 	return readClientTraffic(clientTraffic)
 }
-func getClientTrafficByEmail(mail string) string {
-	clientTraffic, err := GetClientTraffic(mail)
+func getClientTrafficByEmail(ip, mail string) string {
+	//find server info
+	serverInfo := findServerInfo(ip)
+
+	clientTraffic, err := GetClientTraffic(serverInfo, mail)
 	if err != nil {
 		return convertErrorMessage(err.Error())
 	}

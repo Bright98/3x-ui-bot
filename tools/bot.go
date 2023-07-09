@@ -3,11 +3,12 @@ package tools
 import (
 	"fmt"
 	"github.com/joho/godotenv"
+	"log"
+
 	//"github.com/makiuchi-d/gozxing/multi/qrcode"
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
-	"log"
 	"os"
 	"strings"
 )
@@ -27,7 +28,8 @@ func init() {
 	}
 
 	//get bot token
-	botToken := os.Getenv("BOT_TOKEN")
+	botToken := os.Getenv(BotToken)
+	fmt.Println(botToken)
 
 	// create new bot
 	bot, err = telego.NewBot(botToken, telego.WithDefaultDebugLogger())
@@ -55,12 +57,12 @@ func handleBotMessage(_ *telego.Bot, message telego.Message) {
 		sendMessage(message.Chat.ID, HelloMessage)
 	} else {
 		configUrl := getConfigUrlFromMessage(message)
-		email, err := GetUserEmailFromConfigURL(configUrl)
+		serverInfo, email, err := GetUserEmailFromConfigURL(configUrl)
 		if err != nil {
 			sendMessage(message.Chat.ID, convertErrorMessage(err.Error()))
 		}
 
-		inlineKeyboard := retryInlineButton(email)
+		inlineKeyboard := retryInlineButton(email, serverInfo.IP)
 		sendMessage(message.Chat.ID, getClientTraffic(configUrl), inlineKeyboard)
 	}
 }
@@ -68,10 +70,12 @@ func handleBotCallback(_ *telego.Bot, query telego.CallbackQuery) {
 	queries := strings.Split(query.Data, "###")
 
 	if len(queries) > 1 {
+		ip := strings.Split(queries[1], ":")[0]
+		email := strings.Split(queries[1], ":")[1]
 		switch queries[0] {
 		case "retry_callback":
-			inlineKeyboard := retryInlineButton(queries[1])
-			sendMessage(query.Message.Chat.ID, getClientTrafficByEmail(queries[1]), inlineKeyboard)
+			inlineKeyboard := retryInlineButton(email, ip)
+			sendMessage(query.Message.Chat.ID, getClientTrafficByEmail(ip, email), inlineKeyboard)
 		}
 	}
 }
@@ -91,10 +95,10 @@ func sendMessage(chatID int64, messageText string, replyMarkup ...telego.ReplyMa
 		fmt.Println("Error sending telegram message :", err)
 	}
 }
-func retryInlineButton(email string) *telego.InlineKeyboardMarkup {
+func retryInlineButton(email string, ip string) *telego.InlineKeyboardMarkup {
 	return tu.InlineKeyboard(
 		tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton(RetryCalcClientUsage).WithCallbackData("retry_callback###" + email),
+			tu.InlineKeyboardButton(RetryCalcClientUsage).WithCallbackData("retry_callback###" + ip + ":" + email),
 		),
 	)
 }

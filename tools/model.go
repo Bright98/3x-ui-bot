@@ -25,3 +25,12 @@ type UserInboundResponse struct {
 	ExpiredAt int64  `json:"expiryTime"`
 	Total     int64  `json:"total"`
 }
+type Requirements struct {
+	Servers []ServerInfo `json:"servers" yaml:"servers"`
+}
+type ServerInfo struct {
+	IP       string `json:"ip" yaml:"ip"`
+	Port     string `json:"port" yaml:"port"`
+	Username string `json:"username" yaml:"username"`
+	Password string `json:"password" yaml:"password"`
+}

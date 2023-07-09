@@ -5,9 +5,12 @@ import (
 )
 
 func init() {
-	err := tools.Login()
-	if err != nil {
-		panic(err)
+	requirements := tools.RequirementsValue
+	for _, requirement := range requirements.Servers {
+		err := tools.Login(&requirement)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 func main() {

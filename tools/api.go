@@ -4,19 +4,18 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 )
 
 var session = ""
 
-func Login() (err error) {
+func Login(serverInfo *ServerInfo) (err error) {
 	var response []byte
 
 	loginBody := make(map[string]any)
-	loginBody["username"] = os.Getenv(PanelUsername)
-	loginBody["password"] = os.Getenv(PanelPassword)
+	loginBody["username"] = serverInfo.Username
+	loginBody["password"] = serverInfo.Password
 
-	response, session, err = postApi(loginBody, "/login")
+	response, session, err = postApi(loginBody, serverInfo.IP, serverInfo.Port, "/login")
 	if err != nil {
 		return err
 	}
@@ -31,16 +30,16 @@ func Login() (err error) {
 	}
 	return nil
 }
-func GetClientTraffic(userEmail string) (*UserInboundResponse, error) {
-	response, err := getApi("/panel/api/inbounds/getClientTraffics/"+userEmail, session)
+func GetClientTraffic(serverInfo *ServerInfo, userEmail string) (*UserInboundResponse, error) {
+	response, err := getApi(serverInfo.IP, serverInfo.Port, "/panel/api/inbounds/getClientTraffics/"+userEmail, session)
 	if err != nil {
 		if err.Error() == AuthErr {
-			err = Login()
+			err = Login(serverInfo)
 			if err != nil {
 				fmt.Println("login error")
 				panic(err)
 			}
-			response, err = getApi("/panel/api/inbounds/getClientTraffics/"+userEmail, session)
+			response, err = getApi(serverInfo.IP, serverInfo.Port, "/panel/api/inbounds/getClientTraffics/"+userEmail, session)
 		} else {
 			return nil, err
 		}

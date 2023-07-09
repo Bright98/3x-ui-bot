@@ -22,6 +22,19 @@ import (
 func checkStringStartWith(str string, startWith string) bool {
 	return strings.HasPrefix(str, startWith)
 }
+func GetStringInBetween(str string, start string, end string) string {
+	s := strings.Index(str, start)
+	if s == -1 {
+		return ""
+	}
+	s += len(start)
+	e := strings.Index(str[s:], end)
+	if e == -1 {
+		return ""
+	}
+	e = s + e
+	return str[s:e]
+}
 func decodeBase64(str string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(str)
 }
@@ -124,9 +137,9 @@ func getImageFromBot(message telego.Message) ([]byte, error) {
 	return bytes, err
 }
 
-func postApi(body map[string]any, route string) ([]byte, string, error) {
+func postApi(body map[string]any, ip, port, route string) ([]byte, string, error) {
 	bodyByte, _ := json.Marshal(body)
-	url := "http://" + os.Getenv(ServerIP) + ":" + os.Getenv(PanelPort) + route
+	url := "http://" + ip + ":" + port + route
 	req, err := http.NewRequest(
 		"POST", url, bytes.NewBuffer(bodyByte),
 	)
@@ -151,8 +164,8 @@ func postApi(body map[string]any, route string) ([]byte, string, error) {
 	}
 	return responseBody, findSessionInCookies(res.Cookies()), nil
 }
-func getApi(route string, loginSession string) ([]byte, error) {
-	url := "http://" + os.Getenv(ServerIP) + ":" + os.Getenv(PanelPort) + route
+func getApi(ip, port, route string, loginSession string) ([]byte, error) {
+	url := "http://" + ip + ":" + port + route
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, errors.New(CantConnectErr)
@@ -213,4 +226,15 @@ func convertErrorMessage(err string) string {
 	default:
 		return SomethingGetWrong
 	}
+}
+func findServerInfo(ip string) *ServerInfo {
+	serverInfo := &ServerInfo{}
+	for _, server := range RequirementsValue.Servers {
+		if server.IP == ip {
+			serverInfo = &server
+			return serverInfo
+		}
+	}
+
+	return serverInfo
 }

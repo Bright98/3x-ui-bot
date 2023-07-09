@@ -20,7 +20,7 @@ func init() {
 
 	//TODO: remove in upload
 	//load .env file
-	loadEnvFile()
+	//loadEnvFile()
 
 	//get bot token
 	botToken := os.Getenv(BotToken)

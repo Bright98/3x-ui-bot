@@ -10,12 +10,16 @@ It is working for `vless` and `vmess` configs now.
 2. get project:
    - `git clone https://github.com/Bright98/3x-ui-bot.git`
    - `cd 3x-ui-bot`
-   - change `.env` file:
-     - bot token
+   - `nano docker-compose.yaml`
+     - put your `bot token` after: `BotToken=`
+   - put your servers information in `requirements.yaml` file:
      - server ip
      - panel port
      - panel username
      - panel password
+
+     > If you want to add another server, uncomment other lines
+
 
    - `sh install.sh`
 

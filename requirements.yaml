@@ -1,12 +1,12 @@
 servers:
     -
-      ip: "vip.ninjavps.tk"
-      port: "37777"
-      username: "modir"
-      password: "Amirreza132564"
+      ip: "test-ip"
+      port: "test-port"
+      username: "test-username"
+      password: "test-password"
 
-    -
-      ip: "lo.ninjavps.tk"
-      port: "2097"
-      username: "modir"
-      password: "S@m132564"
+#    -
+#      ip: "test2-ip"
+#      port: "test2-port"
+#      username: "test2-username"
+#      password: "test2-password"

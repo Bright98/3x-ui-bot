@@ -24,6 +24,7 @@ func init() {
 
 	//get bot token
 	botToken := os.Getenv(BotToken)
+	fmt.Println(botToken)
 
 	// create new bot
 	bot, err = telego.NewBot(botToken, telego.WithDefaultDebugLogger())

@@ -2,9 +2,6 @@ package tools
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
-	"log"
-
 	//"github.com/makiuchi-d/gozxing/multi/qrcode"
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
@@ -22,10 +19,10 @@ func init() {
 	var err error
 
 	//load .env file
-	err = godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	//err = godotenv.Load()
+	//if err != nil {
+	//	log.Fatal("Error loading .env file")
+	//}
 
 	//get bot token
 	botToken := os.Getenv(BotToken)

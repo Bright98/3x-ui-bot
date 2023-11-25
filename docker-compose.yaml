@@ -1,5 +1,5 @@
 services:
-  3x-ui-bot-service:
+  3x-ui-bot:
     build:
       context: .
       dockerfile: Dockerfile

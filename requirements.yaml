@@ -1,12 +1,1 @@
 servers:
-    -
-      ip: "test-ip"
-      port: "test-port"
-      username: "test-username"
-      password: "test-password"
-
-#    -
-#      ip: "test2-ip"
-#      port: "test2-port"
-#      username: "test2-username"
-#      password: "test2-password"

@@ -5,6 +5,7 @@ red='\033[0;31m'
 green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
+error_content='[ error happened! ]'
 
 # helpers
 insert_in_yaml() {
@@ -14,8 +15,14 @@ insert_in_yaml() {
     local username="$3"
     local password="$4"
 
-    result=$(yq --yaml-output ".servers += [{"id": \""$id"\", "ip": \""$ip"\", "port": \""port"\", "username": \""$username"\", "password": \""$password"\"}]" requirements.yaml)
-    echo "$result" > requirements.yaml
+    result=$(yq --yaml-output ".servers += [{"id": \""$id"\", "ip": \""$ip"\", "port": \""port"\", "username": \""$username"\", "password": \""$password"\"}]" servers.yaml)
+
+    if [ $? -ne 0 ]; then
+        echo ${red}${error_content}
+        return
+    fi
+
+    echo "$result" > servers.yaml
 }
 update_yaml() {
     local id="$1"
@@ -36,19 +43,35 @@ update_yaml() {
                       else
                         .
                       end)" \
-      requirements.yaml)
-     echo "$command" > requirements.yaml
+      servers.yaml)
+
+    if [ $? -ne 0 ]; then
+        echo ${red}${error_content}
+        return
+    fi
+
+     echo "$command" > servers.yaml
 }
 
 # menu functions
 set_bot_token() {
     echo && read -p "Please enter your telegram bot token: " token
-    command=$(yq --yaml-output '.services."3x-ui-bot".environment[0] = "BotToken='$token'"' docker-compose.yaml)
+    command=$(yq --yaml-output '.services."3x-ui-bot".environment[] = "BotToken='$token'"' docker-compose.yaml)
+
+    if [ $? -ne 0 ]; then
+        echo ${red}${error_content}
+        return
+    fi
+
     echo "$command" > docker-compose.yaml
     echo ${green}"[ Bot token set ]"
 }
 get_servers() {
-	cat requirements.yaml
+    cat servers.yaml
+    if [ $? -ne 0 ]; then
+	echo ${red}${error_content}
+	return
+    fi
 }
 define_new_server() {
     echo "Please enter your new server information: "
@@ -74,13 +97,25 @@ update_server_info() {
 remove_server() {
     echo && read -p "Please enter your server id: " id
 
-    command='yq --yaml-output "del(.servers[] | select(.id == \""$id"\"))" requirements.yaml'
+    command='yq --yaml-output "del(.servers[] | select(.id == \""$id"\"))" servers.yaml'
     result="$(eval "$command")"
-    echo "$result" > requirements.yaml
+
+    if [ $? -ne 0 ]; then
+        echo ${red}${error_content}
+        return
+    fi
+
+    echo "$result" > servers.yaml
 }
 remove_all_servers() {
     content="servers:"
-    echo $content > requirements.yaml
+    echo $content > servers.yaml
+
+    if [ $? -ne 0 ]; then
+        echo ${red}${error_content}
+        return
+    fi
+
     echo ${green}"[ All servers removed ]"
 }
 

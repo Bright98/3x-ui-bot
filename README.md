@@ -1,27 +1,35 @@
 # 3x-ui bot
 
-This bot tells clients traffic usage by config url.
+This bot provides information on client traffic usage based on configuration URLs.
+It currently supports `vless` and `vmess` configurations.
 
-It is working for `vless` and `vmess` configs now.
+## Dependencies
+
+-   Python 3
+-   Docker [Learn how to install Docker on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 
 ## How to run:
-1. install docker:
-  - `bash <(curl -sSL https://get.docker.com)`
-2. get project:
-   - `git clone https://github.com/Bright98/3x-ui-bot.git`
-   - `cd 3x-ui-bot`
-   - `nano docker-compose.yaml`
-     - put your `bot token` after: `BotToken=`
-   - put your servers information in `requirements.yaml` file:
-     - server ip
-     - panel port
-     - panel username
-     - panel password
 
-     > If you want to add another server, uncomment other lines
+1. Clone the project:
 
+```bash
+  git clone https://github.com/Bright98/3x-ui-bot.git
+  cd 3x-ui-bot
+```
 
-   - `sh install.sh`
+2. Install the project:
+
+```bash
+sh install.sh
+```
+
+## ✅ Commands
+
+You can use the `3x-ui-bot` command to configure the project:
+
+-   Set your Telegram bot token
+-   Add, update, and manage your servers
 
 ## ⚠️ Attention
-dont use `- (dash)` in user email in panel 
+
+Avoid using a dash (`-`) in the user email on the panel.

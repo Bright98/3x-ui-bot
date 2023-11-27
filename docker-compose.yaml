@@ -6,5 +6,5 @@ services:
     container_name: 3x-ui-bot
     restart: always
     environment:
-      - BotToken=wwwwww
+      - BotToken=oooooo0000
     network_mode: host

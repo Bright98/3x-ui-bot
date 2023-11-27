@@ -1,10 +1,10 @@
 services:
-  3x-ui-bot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: 3x-ui-bot
-    restart: always
-    environment:
-      - BotToken=oooooo0000
-    network_mode: host
+    3x-ui-bot:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: 3x-ui-bot
+        restart: always
+        environment:
+            - BotToken=
+        network_mode: host

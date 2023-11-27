@@ -13,7 +13,7 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 # Check if Docker is installed
-if [ -x "$(command -v docker)" ]; then
+if ! command -v docker &> /dev/null; then
   echo ${red}"Docker is not installed. Please install Docker and try again."
   exit 1
 fi

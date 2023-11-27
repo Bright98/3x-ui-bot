@@ -1,10 +1,10 @@
 #!/bin/bash
 
-red='\033[0;31m'
-green='\033[0;32m'
-yellow='\033[0;33m'
-plain='\033[0m'
-blue='\033[0;34m'
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+plain=$(tput sgr0)
+blue=$(tput setaf 4)
 
 # Check if Python is installed
 if ! command -v python3 >/dev/null 2>&1; then

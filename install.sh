@@ -13,17 +13,17 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 # Check if Docker is installed
-#if [ -x "$(command -v docker)" ]; then
-#  echo ${red}"Docker is not installed. Please install Docker and try again."
-#  exit 1
-#fi
+if [ -x "$(command -v docker)" ]; then
+  echo ${red}"Docker is not installed. Please install Docker and try again."
+  exit 1
+fi
 
 # Stop old image and rebuild
-#echo ${blue}"Stop running last 3x-ui-bot image..."
-#$(docker stop $(docker ps -a -q --filter ancestor=3x-ui-bot --format="{{.ID}}"))
+echo ${blue}"Stop running last 3x-ui-bot image..."
+$(docker stop $(docker ps -a -q --filter ancestor=3x-ui-bot --format="{{.ID}}"))
 
 #echo ${blue}"Installing 3x-ui-bot docker image..."
-#docker compose up --build -d 3x-ui-bot
+docker compose up --build -d 3x-ui-bot
 
 # Install Python dependencies using pip
 echo ${blue}"Installing Python dependencies..."
